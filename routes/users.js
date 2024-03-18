@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const plm = require("passport-local-mongoose");
+
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/formdb",{
@@ -63,10 +65,28 @@ const userSchema = mongoose.Schema({
   cpassword:{
     type:String,
     required:true
+  },
+  tokens:[{
+      token:{
+        type:String,
+        required:true
+      }
+  }]
+})
+
+userSchema.methods.generateAuthToken = async function(){
+  try {
+    const token = jwt.sign({_id:this._id.toString()}, process.env.SECRET_KEY);
+    this.tokens = this.tokens.concat({token:token})
+    await this.save();
+    return token;
+  } catch (error) {
+    res.send("the error part" + error);
+    
   }
 
+}
 
- 
-})
+
 userSchema.plugin(plm);
 module.exports = mongoose.model("user",userSchema );

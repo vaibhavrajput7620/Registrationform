@@ -1,9 +1,13 @@
+require("dotenv").config();
 var express = require('express');
 const passport = require('passport');
 var router = express.Router();
 const userModel = require("./users");
 const localStrategy = require("passport-local");
 passport.use(new localStrategy(userModel.authenticate()));
+const jwt = require("jsonwebtoken");
+const auth = require("./middleware/auth");
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,7 +22,7 @@ router.get('/signin', function(req, res, next) {
 router.get('/username', function(req, res, next) {
   res.render('username');
 });
-router.get('/welcome', function(req, res, next) {
+router.get('/welcome', auth, function(req, res, next) {
   res.render("welcome");
 });
 router.get('/welcome/viewreminder', function(req, res, next) {
@@ -61,8 +65,16 @@ router.post("/register", async function(req, res){
          cpassword:cpassword
           
       })
+
+      const token = await userData.generateAuthToken();
+
+      res.cookie("jwt", token, {
+         expire: new Date(Date.now() +30000),
+         httpOnly:true
+      });
    
-      const registered = await  userData.save();
+      const registered = await userData.save();
+      console.log("the page part" + registered );
       res.status(201).render("signin");
     }else{
       res.send("password are not matching")
@@ -78,6 +90,13 @@ try {
   const password = req.body.password;
 
   const usernames = await userModel.findOne({username:username});
+
+  const token = await usernames.generateAuthToken();
+
+  res.cookie("jwt", token, {
+    expire: new Date(Date.now() + 30000),
+    httpOnly:true,
+ });
 
   if (usernames.password === password) {
     res.status(201).render("welcome")
@@ -131,4 +150,6 @@ try {
 //   if(req.isAuthenticated())return next();
 //   res.redirect("/");
 // }
+
+
 module.exports = router;
