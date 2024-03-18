@@ -69,7 +69,7 @@ router.post("/register", async function(req, res){
       const token = await userData.generateAuthToken();
 
       res.cookie("jwt", token, {
-         expire: new Date(Date.now() +30000),
+         expires: new Date(Date.now() +30000),
          httpOnly:true
       });
    
@@ -94,7 +94,7 @@ try {
   const token = await usernames.generateAuthToken();
 
   res.cookie("jwt", token, {
-    expire: new Date(Date.now() + 30000),
+    expires: new Date(Date.now() + 30000),
     httpOnly:true,
  });
 
