@@ -10,59 +10,59 @@ mongoose.connect("mongodb://127.0.0.1:27017/formdb",{
 const userSchema = mongoose.Schema({ 
   firstname:{
     type : String,
-    require:true
+    required:true
     
   },
   lastname:{
     type : String,
-    require:true
+    required:true
     
   },
   address:{
     type:String,
-    require:true
+    required:true
     
   },
   pincode:{
     type:Number,
-    require:true
+    required:true
   },
   gender: {
     type: String,
-    require:true
+    required:true
   },
   email:{
     type:String,
-    require:true
+    required:true
   },
   phonenumber: {
     type: Number,
-    require:true
+    required:true
     
   },
   country:{
     type:String,
-    require:true
+    required:true
   },
   bio:{
     type:String,
-    require:true
+    required:true
   },
   dob:{
     type:Date,
-    require:true
+    required:true
   },
   username:{
     type:String,
-    require:true
+    required:true
   },
   password:{
     type:String,
-    require:true
+    required:true
   },
   cpassword:{
     type:String,
-    require:true
+    required:true
   }
 
 
